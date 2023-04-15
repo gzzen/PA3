@@ -48,32 +48,54 @@ stats::stats(PNG& im) :
 }
 
 long stats::getSum(char channel, pair<int,int> ul, int dim) {
+    // x-vec <y-vec <...>> (by columns in matrix)   
     int side = pow(2, dim)-1;
-    // x-vec <y-vec <...>> (by columns in matrix)
+    long x_space_sum = 0;
+    long y_space_sum = 0;
+    long sum_overlap = 0;
+    pair<int,int> end = {ul.first+side, ul.second+side};
+    vector<vector<long>> sumv;
     switch (channel) {
         case 'r':
-            return sumRed[ul.first+side][ul.second+side];
+            sumv = sumRed;
+            break;
         case 'g':
-            return sumGreen[ul.first+side][ul.second+side];
+            sumv = sumGreen;
+            break;
         case 'b':
-            return sumBlue[ul.first+side][ul.second+side];
-        default:
-            return NULL;
+            sumv = sumBlue;
+            break;
     }
+    if (ul.first != 0) x_space_sum = sumv[ul.first-1][end.second];
+    if (ul.second != 0) y_space_sum = sumv[end.first][ul.second-1];
+    if (ul.first != 0 && ul.second != 0) sum_overlap = sumv[ul.first-1][ul.second-1];
+    
+    return sumv[end.first][end.second] - x_space_sum - y_space_sum + sum_overlap;
 }
 
 long stats::getSumSq(char channel, pair<int, int> ul, int dim) {
     int side = pow(2, dim)-1;
+    long x_space_sumsq = 0;
+    long y_space_sumsq = 0;
+    long sumsq_overlap = 0;
+    pair<int,int> end = {ul.first+side, ul.second+side};
+    vector<vector<long>> sumsqv;
     switch (channel) {
         case 'r':
-            return sumsqRed[ul.first+side][ul.second+side];
+            sumsqv = sumsqRed;
+            break;
         case 'g':
-            return sumsqGreen[ul.first+side][ul.second+side];
+            sumsqv = sumsqGreen;
+            break;
         case 'b':
-            return sumsqBlue[ul.first+side][ul.second+side];
-        default:
-            return NULL;
-    } 
+            sumsqv = sumsqBlue;
+            break;
+    }
+    if (ul.first != 0) x_space_sumsq = sumsqv[ul.first-1][end.second];
+    if (ul.second != 0) y_space_sumsq = sumsqv[end.first][ul.second-1];
+    if (ul.first != 0 && ul.second != 0) sumsq_overlap = sumsqv[ul.first-1][ul.second-1];
+    
+    return sumsqv[end.first][end.second] - x_space_sumsq - y_space_sumsq + sumsq_overlap;
 }
 
 long stats::rectArea(int dim) {

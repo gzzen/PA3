@@ -43,6 +43,26 @@ TEST_CASE("stats::basic getAvg", "[weight=1][part=stats]") {
     REQUIRE(result == expected);
 }
 
+TEST_CASE("stats::getsum non origin", "[weight=1][part=stats]") {
+    PNG data;
+    data.resize(4, 5);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 5; j++) {
+            RGBAPixel* p = data.getPixel(i, j);
+            p->r = 0;
+            p->g = 0;
+            p->b = i+j;
+            p->a = 1.0;
+        }
+    }
+    stats s(data);
+    pair<int, int> ul(0, 1);
+    long result = s.getSum('b', ul, 2);
+    long expected = 64;
+
+    REQUIRE(result == expected);
+}
+
 TEST_CASE("stats::basic variance", "[weight=1][part=stats]") {
     PNG data;
     data.resize(2, 2);
@@ -61,6 +81,8 @@ TEST_CASE("stats::basic variance", "[weight=1][part=stats]") {
 
     REQUIRE(result == 1876);
 }
+
+
 
 TEST_CASE("qtcount::basic ctor render", "[weight=1][part=qtcount]") {
     PNG img;
