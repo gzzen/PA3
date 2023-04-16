@@ -82,6 +82,12 @@ TEST_CASE("stats::basic variance", "[weight=1][part=stats]") {
     REQUIRE(result == 1876);
 }
 
+TEST_CASE("qtcount::build tree", "[weight=1][part=qtcount]") {
+    PNG img;
+    img.readFromFile("images/orig/geo.png");
+    qtcount test(img);
+}
+
 
 
 TEST_CASE("qtcount::basic ctor render", "[weight=1][part=qtcount]") {

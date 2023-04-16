@@ -8,6 +8,7 @@
  */
 
 #include "quadtree.h"
+#include <iostream>
 using namespace std;
 
 // Node constructor, given.
@@ -32,12 +33,30 @@ quadtree& quadtree::operator=(const quadtree& rhs) {
 }
 
 quadtree::quadtree(PNG& imIn) {
-    /* Your code here! */
+    stats s (imIn);
+    edge = imIn.width();
+    root = buildTree(s, {0,0}, log2(edge));
 }
 
 quadtree::Node* quadtree::buildTree(stats& s, pair<int, int> ul, int dim) {
-    /* Your code here! */
-    return nullptr;
+    Node* node = new Node(ul, dim, s.getAvg(ul, dim), s.getVar(ul, dim));
+    // cout<<dim;
+
+    if (dim == 0) {
+        // cout<<"哈";
+        node->NW = nullptr;
+        node->NE = nullptr;
+        node->SE = nullptr;
+        node->NE = nullptr;
+    } else {
+        int side = pow(2, dim) / 2;
+        node->NW = buildTree(s, ul, dim-1);
+        node->NE = buildTree(s, {ul.first+side, ul.second}, dim-1);
+        node->SE = buildTree(s, {ul.first+side, ul.second+side}, dim-1);
+        node->NE = buildTree(s, {ul.first, ul.second+side}, dim-1);
+    }
+
+    return node;
 }
 
 PNG quadtree::render() const {

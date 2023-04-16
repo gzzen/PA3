@@ -109,6 +109,8 @@ public:
      */
     quadtree(PNG& imIn);
 
+    
+
     /**
      * Render returns a PNG image consisting of the pixels
      * stored in the tree. It may be used on pruned trees. Draws
