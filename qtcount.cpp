@@ -19,7 +19,7 @@ bool qtcount::prunable(Node* node, const int tol) const {
         if (NW == nullptr && NE == nullptr && SE == nullptr && SW == nullptr) {
             RGBAPixel curr_avg = curr->avg;
             int diff = pow(curr_avg.r - node_avg.r, 2) + pow(curr_avg.g - node_avg.g, 2) + pow(curr_avg.b - node_avg.b, 2);
-            if (diff > tol) return false;
+            if (diff >= tol) return false;
         } else {
             nodes.push_back(NW);
             nodes.push_back(NE);
